@@ -2,7 +2,7 @@ const go = new Go();
 
 let mod, inst;
 
-WebAssembly.instantiateStreaming(fetch("/out/zip.wasm"), go.importObject).then((result) => {
+WebAssembly.instantiateStreaming(fetch("../out/zip.wasm"), go.importObject).then((result) => {
 	mod = result.module;
 	inst = result.instance;
 	return run();
