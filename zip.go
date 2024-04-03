@@ -8,8 +8,6 @@ import (
 	"syscall/js"
 )
 
-var stopChan chan bool
-
 func DeflateZip(jsContents js.Value, fileCallback js.Value) error {
 	length, err := jsutil.GetLength(jsContents)
 	if err != nil {
@@ -40,11 +38,7 @@ func DeflateZip(jsContents js.Value, fileCallback js.Value) error {
 	return nil
 }
 
-func main() {
-	println("Hello from Go!")
-
-	stopChan = make(chan bool, 1)
-
+func initialiseZip() {
 	zipObj := js.ValueOf(make(map[string]any))
 
 	zipObj.Set("deflateZip", js.FuncOf(func(this js.Value, args []js.Value) any {
@@ -67,14 +61,9 @@ func main() {
 		return js.Undefined()
 	}))
 
-	zipObj.Set("stop", js.FuncOf(func(this js.Value, args []js.Value) any {
-		stopChan <- true
-		return js.Undefined()
-	}))
-
 	js.Global().Set("zip", zipObj)
+}
 
-	<-stopChan
-
-	println("Goodbye from Go!")
+func cleanupZip() {
+	js.Global().Delete("zip")
 }
