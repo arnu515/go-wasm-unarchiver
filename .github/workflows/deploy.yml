@@ -28,7 +28,7 @@ jobs:
     - name: Build WASM
       run: |
         GOOS=js GOARCH=wasm go mod download
-        GOOS=js GOARCH=wasm go build -o static/out/zip.wasm .
+        GOOS=js GOARCH=wasm go build -o static/out/main.wasm .
     - name: Upload pages artifact
       uses: actions/upload-pages-artifact@v3
       with:

@@ -1,6 +1,6 @@
 .PHONY: build
 build:
-	@GOOS=js GOARCH=wasm go build -o static/out/zip.wasm
+	@GOOS=js GOARCH=wasm go build -o static/out/main.wasm
 
 .PHONY: serve
 serve:

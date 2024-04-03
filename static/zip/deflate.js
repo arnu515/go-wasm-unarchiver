@@ -2,11 +2,11 @@ const go = new Go();
 
 let mod, inst;
 
-WebAssembly.instantiateStreaming(fetch("../out/zip.wasm"), go.importObject).then((result) => {
+WebAssembly.instantiateStreaming(fetch("../out/main.wasm"), go.importObject).then((result) => {
 	mod = result.module;
 	inst = result.instance;
 	return run();
-}).then(() => console.log("WASM: ZIP module exited.")).catch(console.error)
+}).then(() => console.log("WASM: Go module exited.")).catch(console.error)
 
 async function run() {
 	await go.run(inst);
