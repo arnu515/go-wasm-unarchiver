@@ -1,0 +1,28 @@
+on:
+  push:
+    branches: master
+
+name: Deploy to GitHub Pages
+
+jobs:
+  deploy:
+    name: Build & Deploy
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    - name: Setup Go
+      uses: actions/setup-go@v5.0.0
+      with:
+        go-version: '1.22'
+    - name: Build WASM
+      run: |
+        go mod download
+        go build -o static/out/zip.wasm .
+    - name: Upload pages artifact
+      uses: actions/upload-pages-artifact@v3
+      with:
+        path: static/
+    - name: Deploy pages artifact
+      id: deployment
+      uses: actions/deploy-pages@v4
