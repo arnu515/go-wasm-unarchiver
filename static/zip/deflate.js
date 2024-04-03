@@ -16,6 +16,7 @@ async function run() {
 
 document.getElementById("form").addEventListener("submit", e => {
 	e.preventDefault();
+	document.getElementById("output").innerHTML = "";
 	const fd = new FormData(e.target);
 	const file = fd.get("file");
 	const reader = new FileReader();
