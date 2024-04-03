@@ -16,10 +16,12 @@ func main() {
 	}))
 
 	initialiseZip()
+	initialiseGZip()
 
 	<-stopChan
 
 	cleanupZip()
+	cleanupGZip()
 
 	println("Goodbye from Go!")
 }
