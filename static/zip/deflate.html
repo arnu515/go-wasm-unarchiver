@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Deflate a zip file with WASM</title>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
+	<script src="/wasm_exec.js" defer></script>
+	<script src="/zip/deflate.js" defer></script>
+	<style>
+		#output> :nth-child(even) {
+			background-color: #ccc;
+		}
+
+		@media (prefers-color-scheme: dark) {
+			#output> :nth-child(even) {
+				background-color: #444;
+			}
+		}
+	</style>
+</head>
+
+<body>
+	<h1>Deflate a ZIP file</h1>
+	<form id="form">
+		<label for="file">Select a file</label>
+		<input type="file" name="file" id="file">
+		<button type="submit">Deflate</button>
+	</form>
+
+	<div id="output"></div>
+</body>
+
+</html>

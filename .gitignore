@@ -1,0 +1,2 @@
+static/out/*
+!static/out/.gitkeep
