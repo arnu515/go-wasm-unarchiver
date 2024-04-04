@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Create a zip file with WASM</title>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
+	<script src="../wasm_exec.js" defer></script>
+	<script src="create.js" defer></script>
+</head>
+
+<body>
+	<p><a href="../">&laquo; Go back</a></p>
+	<h1>Create a ZIP file</h1>
+	<form id="form">
+		<label for="files">Select files</label>
+		<input type="file" name="files" multiple id="files">
+		<button type="submit">Create Zip file</button>
+	</form>
+
+	<p id="error" style="color: red"></p>
+</body>
+
+</html>
