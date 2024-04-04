@@ -4,17 +4,17 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Deflate a zip file with WASM</title>
+	<title>Inflate a [tar.]gzip file with WASM</title>
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
 	<script src="../wasm_exec.js" defer></script>
-	<script src="deflate.js" defer></script>
+	<script src="inflate.js" defer></script>
 	<style>
-		#output> :nth-child(even) {
+		#targz-output> :nth-child(even) {
 			background-color: #ccc;
 		}
 
 		@media (prefers-color-scheme: dark) {
-			#output> :nth-child(even) {
+			#targz-output> :nth-child(even) {
 				background-color: #444;
 			}
 		}
@@ -23,14 +23,23 @@
 
 <body>
 	<p><a href="../">&laquo; Go back</a></p>
-	<h1>Deflate a ZIP file</h1>
+	<h1>Inflate a GZIP file</h1>
 	<form id="form">
 		<label for="file">Select a file</label>
 		<input type="file" name="file" id="file">
-		<button type="submit">Deflate</button>
+		<button type="submit">Inflate</button>
 	</form>
+	<p style="color: red" id="error">&nbsp;</p>
 
-	<div id="output"></div>
+	<hr>
+
+	<h1>Inflate a tar.gz file</h1>
+	<form id="targz-form">
+		<label for="targz-file">Select a file</label>
+		<input type="file" name="file" id="targz-file">
+		<button type="submit">Inflate</button>
+	</form>
+	<div id="targz-output"></div>
 </body>
 
 </html>

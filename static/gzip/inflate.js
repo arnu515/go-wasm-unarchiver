@@ -24,7 +24,7 @@ document.getElementById("form").addEventListener("submit", e => {
 		if (go.exited) {
 			run()
 		}
-		const res = gzip.deflate(data);
+		const res = gzip.gunzip(data);
 		if (typeof res === "string") {
 			document.getElementById("error").textContent = "GZip Error: " + res;
 		}
@@ -49,7 +49,7 @@ document.getElementById("targz-form").addEventListener("submit", e => {
 		if (go.exited) {
 			run()
 		}
-		const res = gzip.deflateTarGz(data, appendToOutput);
+		const res = gzip.untargz(data, appendToOutput);
 		if (typeof res === "string") {
 			appendToOutput("Error: " + res, undefined);
 		}

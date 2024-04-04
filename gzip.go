@@ -10,7 +10,7 @@ import (
 	"syscall/js"
 )
 
-func DeflateGZip(contents []byte) ([]byte, error) {
+func InflateGZip(contents []byte) ([]byte, error) {
 	bytes_reader := bytes.NewReader(contents)
 	gzip_reader, err := gzip.NewReader(bytes_reader)
 	if err != nil {
@@ -33,7 +33,7 @@ type DeflateTarFile struct {
 	contents []byte
 }
 
-func DeflateTar(contents []byte, callback func(DeflateTarFile)) error {
+func InflateTar(contents []byte, callback func(DeflateTarFile)) error {
 	bytes_reader := bytes.NewReader(contents)
 	tar_reader := tar.NewReader(bytes_reader)
 
@@ -60,58 +60,58 @@ func DeflateTar(contents []byte, callback func(DeflateTarFile)) error {
 	return nil
 }
 
-func DeflateTarGz(contents []byte, callback func(DeflateTarFile)) error {
-	deflated, err := DeflateGZip(contents)
+func InflateTarGz(contents []byte, callback func(DeflateTarFile)) error {
+	deflated, err := InflateGZip(contents)
 	if err != nil {
 		return err
 	}
 
-	return DeflateTar(deflated, callback)
+	return InflateTar(deflated, callback)
 }
 
 func initialiseGZip() {
 	gzipObj := js.ValueOf(make(map[string]any))
 
-	gzipObj.Set("deflate", js.FuncOf(func(this js.Value, args []js.Value) any {
+	gzipObj.Set("gunzip", js.FuncOf(func(this js.Value, args []js.Value) any {
 		if len(args) != 1 {
-			return fmt.Sprintf("gzip.deflateTarGz: Expected 1 argument, got %d", len(args))
+			return fmt.Sprintf("gunzip: Expected 1 argument, got %d", len(args))
 		}
 		length, err := jsutil.GetLength(args[0])
 		if err != nil {
-			return fmt.Sprintf("gzip.deflateTarGz: Invalid argument: %s", err)
+			return fmt.Sprintf("gunzip: Invalid argument: %s", err)
 		}
 		contents := make([]byte, length)
 		_, err = jsutil.CopyBytesToGo(contents, args[0])
 		if err != nil {
-			return fmt.Sprintf("gzip.deflateTarGz: Could not get data: %s", err)
+			return fmt.Sprintf("gunzip: Could not get data: %s", err)
 		}
 
-		deflated, err := DeflateGZip(contents)
+		deflated, err := InflateGZip(contents)
 		if err != nil {
-			return fmt.Sprintf("gzip.deflateTarGz: Could not deflate gzip: %s", err)
+			return fmt.Sprintf("gunzip: Could not deflate gzip: %s", err)
 		}
 
 		uint8Array := js.Global().Get("Uint8Array").New(len(deflated))
 		_, err = jsutil.CopyBytesToJS(uint8Array, deflated)
 		if err != nil {
-			return fmt.Sprintf("gzip.deflateTarGz: Could not send data: %s", err)
+			return fmt.Sprintf("gunzip: Could not send data: %s", err)
 		}
 
 		return uint8Array
 	}))
 
-	gzipObj.Set("deflateTarGz", js.FuncOf(func(this js.Value, args []js.Value) any {
+	gzipObj.Set("untargz", js.FuncOf(func(this js.Value, args []js.Value) any {
 		if len(args) != 1 && len(args) != 2 {
-			return fmt.Sprintf("gzip.deflateTarGz: Expected 1 or 2 arguments, got %d", len(args))
+			return fmt.Sprintf("untargz: Expected 1 or 2 arguments, got %d", len(args))
 		}
 		length, err := jsutil.GetLength(args[0])
 		if err != nil {
-			return fmt.Sprintf("gzip.deflateTarGz: Invalid argument: %s", err)
+			return fmt.Sprintf("untargz: Invalid argument: %s", err)
 		}
 		contents := make([]byte, length)
 		_, err = jsutil.CopyBytesToGo(contents, args[0])
 		if err != nil {
-			return fmt.Sprintf("gzip.deflateTarGz: Could not get data: %s", err)
+			return fmt.Sprintf("untargz: Could not get data: %s", err)
 		}
 		var cbfunc js.Value
 		if len(args) == 1 {
@@ -123,16 +123,16 @@ func initialiseGZip() {
 			cbfunc = js.Global().Get("console").Get("log")
 		}
 
-		err = DeflateTarGz(contents, func(file DeflateTarFile) {
+		err = InflateTarGz(contents, func(file DeflateTarFile) {
 			uint8Array := js.Global().Get("Uint8Array").New(len((file.contents)))
 			_, err = jsutil.CopyBytesToJS(uint8Array, file.contents)
 			if err != nil {
-				cbfunc.Invoke(fmt.Sprintf("gzip.deflateTarGz: Could not send data: %s", err), js.Undefined())
+				cbfunc.Invoke(fmt.Sprintf("untargz: Could not send data: %s", err), js.Undefined())
 			}
 			cbfunc.Invoke(file.name, uint8Array)
 		})
 		if err != nil {
-			return fmt.Sprintf("gzip.deflateTarGz: Could not deflate tar.gz: %s", err)
+			return fmt.Sprintf("untargz: Could not deflate tar.gz: %s", err)
 		}
 
 		return js.Undefined()

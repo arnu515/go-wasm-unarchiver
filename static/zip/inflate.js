@@ -25,7 +25,7 @@ document.getElementById("form").addEventListener("submit", e => {
 		if (go.exited) {
 			run()
 		}
-		const res = zip.deflateZip(data, appendToOutput);
+		const res = zip.unzip(data, appendToOutput);
 		if (typeof res === "string") {
 			appendToOutput("Error: " + res, undefined);
 		}
